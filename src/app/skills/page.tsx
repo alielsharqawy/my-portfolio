@@ -7,7 +7,7 @@ import {
   FaFigma,  FaNodeJs, FaPython, FaFireAlt, FaServer, FaCogs, FaTools
 } from "react-icons/fa";
 import {
-  SiTypescript, SiNextdotjs, SiFirebase, SiDjango, SiDart
+  SiTypescript, SiNextdotjs, SiFirebase, SiDjango, 
 } from "react-icons/si";
 import { MdApi } from "react-icons/md";
 

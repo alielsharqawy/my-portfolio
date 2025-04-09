@@ -3,7 +3,6 @@ import React from 'react'
 import Contact from './contact/page'
 import Skills from './skills/page'
 import AboutMe from './about/page'
-import Projects from './projects/page'
 
 const HomePage = () => {
   return (
