@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    domains: ["th.bing.com", 'calories-two.vercel.app'],
+  },
 };
 
 export default nextConfig;

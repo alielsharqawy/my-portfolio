@@ -2,14 +2,16 @@ import HeroSection from '@/components/HeroSection'
 import React from 'react'
 import Contact from './contact/page'
 import Skills from './skills/page'
-import AboutMe from './about/page'
+import Services from './services/page'
+import Projects from './projects/page'
 
 const HomePage = () => {
   return (
     <div>
       <HeroSection />
-      <AboutMe />
-      <Skills/>
+      <Services />
+      <Skills />
+      <Projects/>
       <Contact/>
     </div>
   )

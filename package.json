@@ -12,6 +12,7 @@
     "@react-three/fiber": "^9.1.2",
     "@tsparticles/engine": "^3.8.1",
     "@tsparticles/react": "^3.0.0",
+    "firebase": "^11.6.0",
     "framer-motion": "^12.6.3",
     "next": "15.2.5",
     "react": "^19.0.0",
