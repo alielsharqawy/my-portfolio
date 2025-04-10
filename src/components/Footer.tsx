@@ -1,6 +1,5 @@
 "use client";
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -21,7 +20,7 @@ type SocialLink = {
 // Centralized social links data
 const SOCIAL_LINKS: SocialLink[] = [
   {
-    href: "https://facebook.com",
+    href: "https://www.facebook.com/profile.php?id=100007324187612",
     label: "Facebook",
     icon: <FaFacebookF />,
   },
@@ -31,7 +30,7 @@ const SOCIAL_LINKS: SocialLink[] = [
     icon: <FaLinkedinIn />,
   },
   {
-    href: "https://instagram.com",
+    href: "https://www.instagram.com/_ali.elsharqawy/",
     label: "Instagram",
     icon: <FaInstagram />,
   },
@@ -43,7 +42,7 @@ const SOCIAL_LINKS: SocialLink[] = [
 ];
 
 // Reusable Social Icon component
-const SocialIcon: React.FC<SocialLink> = ({ href, label, icon }) => (
+const SocialIcon: React.FC<SocialLink & { isDarkMode: boolean }> = ({ href, label, icon, isDarkMode }) => (
   <motion.div
     whileHover={{ scale: 1.1, y: -3 }}
     transition={{ duration: 0.3 }}
@@ -53,7 +52,10 @@ const SocialIcon: React.FC<SocialLink> = ({ href, label, icon }) => (
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="flex items-center justify-center border border-gray-500 rounded-full p-2 text-gray-300 hover:bg-white hover:text-black transition-all duration-300"
+      className={`flex items-center justify-center rounded-full p-2 transition-all duration-300
+        ${isDarkMode
+          ? 'border border-gray-500 text-gray-300 hover:bg-white hover:text-black'
+          : 'border border-gray-400 text-gray-600 hover:bg-indigo-600 hover:text-white'}`}
     >
       {icon}
     </Link>
@@ -62,6 +64,27 @@ const SocialIcon: React.FC<SocialLink> = ({ href, label, icon }) => (
 
 // Main Footer component with smooth scroll
 const Footer: React.FC = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Sync with document's dark mode class
+  useEffect(() => {
+    const handleDarkModeChange = () => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    };
+
+    // Initial check
+    handleDarkModeChange();
+
+    // Listen for changes
+    const observer = new MutationObserver(handleDarkModeChange);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   // Function to handle smooth scrolling to the top
   const handleScrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -72,7 +95,12 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="w-full bg-gradient-to-b from-gray-900 to-black text-white py-8 px-4 sm:px-6 md:px-12 lg:px-20 text-center">
+    <footer
+      className={`w-full py-8 px-4 sm:px-6 md:px-12 lg:px-20 text-center transition-colors duration-300
+        ${isDarkMode
+          ? 'bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white' 
+        : 'bg-gradient-to-r from-white via-gray-100 to-white text-gray-900'}`}
+    >
       {/* Back to Top Section */}
       <motion.div
         initial={{ opacity: 0 }}
@@ -83,7 +111,8 @@ const Footer: React.FC = () => {
         <a
           href="#"
           onClick={handleScrollToTop}
-          className="text-gray-400 hover:text-white flex justify-center items-center mb-2"
+          className={`flex justify-center items-center mb-2
+            ${isDarkMode ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-indigo-600'}`}
         >
           <motion.div
             whileHover={{ scale: 1.1 }}
@@ -92,7 +121,10 @@ const Footer: React.FC = () => {
             <FaArrowAltCircleUp size={24} />
           </motion.div>
         </a>
-        <p className="text-xs md:text-sm font-semibold tracking-wider text-gray-300">
+        <p
+          className={`text-xs md:text-sm font-semibold tracking-wider
+            ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
+        >
           BACK TO TOP
         </p>
       </motion.div>
@@ -100,12 +132,15 @@ const Footer: React.FC = () => {
       {/* Social Links */}
       <div className="flex justify-center flex-wrap gap-4 md:gap-6 mb-6">
         {SOCIAL_LINKS.map((link) => (
-          <SocialIcon key={link.label} {...link} />
+          <SocialIcon key={link.label} {...link} isDarkMode={isDarkMode} />
         ))}
       </div>
 
       {/* Copyright */}
-      <p className="text-xs md:text-sm text-gray-500">
+      <p
+        className={`text-xs md:text-sm
+          ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}
+      >
         ©2024 Ali Elsharqawy. All Rights Reserved.
       </p>
     </footer>

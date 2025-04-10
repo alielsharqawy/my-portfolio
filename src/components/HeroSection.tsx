@@ -1,12 +1,10 @@
 "use client";
-
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaEnvelope, FaGithub, FaLinkedinIn } from "react-icons/fa";
-import My from "@/assets/p.png"; // Assuming this is your image
-import Navbar from "./Navbar";
+import My from "@/assets/p.png";
 
 // Type definition for social links
 type SocialLink = {
@@ -42,7 +40,7 @@ const SocialIcon: React.FC<SocialLink> = ({ href, label, icon }) => (
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="flex items-center justify-center bg-gray-200 text-gray-800 rounded-full p-3 hover:bg-indigo-600 hover:text-white transition-all duration-300"
+      className="flex items-center justify-center bg-gray-200 text-gray-800 rounded-full p-3 hover:bg-indigo-600 hover:text-white dark:bg-gray-700 dark:text-white dark:hover:bg-indigo-500 transition-all duration-300"
     >
       {icon}
     </Link>
@@ -52,6 +50,26 @@ const SocialIcon: React.FC<SocialLink> = ({ href, label, icon }) => (
 // Main HeroSection component
 const HeroSection: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Sync with document's dark mode class
+  useEffect(() => {
+    const handleDarkModeChange = () => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    };
+
+    // Initial check
+    handleDarkModeChange();
+
+    // Listen for changes
+    const observer = new MutationObserver(handleDarkModeChange);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   // Full about text
   const fullText =
@@ -62,9 +80,12 @@ const HeroSection: React.FC = () => {
     "I’m Ali Elsharqawy, a Junior Front-End Developer with a Bachelor’s degree in Computer Science from Mansoura University. I’m passionate about crafting responsive and visually appealing web applications.";
 
   return (
-    <section className="w-full bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 text-gray-800">
-      <Navbar />
-
+    <section
+      className={`w-full transition-colors duration-300
+        ${isDarkMode
+          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-100'
+          : 'bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 text-gray-800'}`}
+    >
       {/* Hero Content */}
       <div className="flex flex-col md:flex-row items-center justify-between max-w-7xl mx-auto px-4 sm:px-6 md:px-12 lg:px-10 py-12 md:py-16">
         {/* Left Side: Text, Social Links, and About Me */}
@@ -76,13 +97,18 @@ const HeroSection: React.FC = () => {
         >
           {/* Greeting, Name, and Title */}
           <div className="space-y-4">
-            <h2 className="text-lg md:text-xl font-semibold text-gray-600">
+            <h2 className={`text-lg md:text-xl font-semibold
+              ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
               Hi, I am
             </h2>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-teal-500">
+            <h1 className={`text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight bg-clip-text text-transparent
+              ${isDarkMode 
+                ? 'bg-gradient-to-r from-indigo-400 to-teal-300' 
+                : 'bg-gradient-to-r from-indigo-600 to-teal-500'}`}>
               Ali Elsharqawy
             </h1>
-            <p className="text-base md:text-lg text-gray-600 font-medium">
+            <p className={`text-base md:text-lg font-medium
+              ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               Front-end Developer / UI Designer
             </p>
           </div>
@@ -95,9 +121,10 @@ const HeroSection: React.FC = () => {
           </div>
 
           {/* About Me Section */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
+          <div className={`rounded-lg shadow-lg p-6
+            ${isDarkMode ? 'bg-gray-800 text-gray-100' : 'bg-white text-gray-800'}`}>
             <motion.h2
-              className="text-lg md:text-xl font-semibold tracking-widest mb-4 text-gray-800"
+              className="text-lg md:text-xl font-semibold tracking-widest mb-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8 }}
@@ -109,7 +136,8 @@ const HeroSection: React.FC = () => {
             <AnimatePresence mode="wait">
               <motion.p
                 key={isExpanded ? "full" : "preview"}
-                className="text-sm md:text-base text-gray-600 mb-6 leading-relaxed"
+                className={`text-sm md:text-base mb-6 leading-relaxed
+                  ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
@@ -122,7 +150,10 @@ const HeroSection: React.FC = () => {
             {/* Read More Button */}
             <motion.button
               onClick={() => setIsExpanded(!isExpanded)}
-              className="text-sm md:text-base bg-indigo-600 text-white py-2 px-6 rounded-full hover:bg-indigo-700 transition-all duration-300"
+              className={`text-sm md:text-base py-2 px-6 rounded-full transition-all duration-300
+                ${isDarkMode 
+                  ? 'bg-indigo-500 text-white hover:bg-indigo-600' 
+                  : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0 }}
@@ -141,7 +172,8 @@ const HeroSection: React.FC = () => {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 bg-black/20 rounded-full overflow-hidden shadow-xl border-4 border-gray-200">
+          <div className={`relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full overflow-hidden shadow-xl border-4
+            ${isDarkMode ? 'bg-gray-700 border-gray-600' : 'bg-black/20 border-gray-200'}`}>
             <Image
               src={My}
               alt="Ali Elsharqawy"
