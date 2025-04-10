@@ -2,8 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { motion } from "framer-motion";
+
+// الصور المحلية
 import one from "./assets/1.jpeg"; // Electro Store
 import two from "./assets/2.jpeg"; // Lawer
 import three from "./assets/3.jpeg"; // Healthtic
@@ -11,15 +13,16 @@ import four from "./assets/4.jpeg"; // Fashioniza
 import five from "./assets/5.jpeg"; // Legends
 import six from "./assets/6.jpeg"; // Portfolio
 
+// تعريف نوع المشروع
 type Project = {
   id: string;
   title: string;
-  image: any;
+  image: StaticImageData;
   description: string;
   url: string;
 };
 
-// Project Card Component
+// كارد المشروع
 const ProjectCard: React.FC<{ project: Project }> = ({ project }) => (
   <motion.div
     className="relative bg-white/80 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-gray-100/50 transform transition-all duration-500 hover:shadow-2xl hover:-translate-y-3"
@@ -50,11 +53,10 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => (
   </motion.div>
 );
 
-// Projects Page
+// صفحة المشاريع
 const Projects: NextPage = () => {
   const [projects, setProjects] = useState<Project[]>([]);
 
-  // Static project data with URLs and descriptions
   useEffect(() => {
     const staticProjects: Project[] = [
       {
@@ -106,7 +108,7 @@ const Projects: NextPage = () => {
   return (
     <section className="w-full min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50 to-teal-50 text-gray-800 py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 md:px-12 lg:px-16">
-        {/* Page Header */}
+        {/* عنوان الصفحة */}
         <motion.div
           className="text-center mb-16 md:mb-24"
           initial={{ opacity: 0, y: -40 }}
@@ -121,7 +123,7 @@ const Projects: NextPage = () => {
           </p>
         </motion.div>
 
-        {/* Projects Grid */}
+        {/* شبكة المشاريع */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12">
           {projects.length > 0 ? (
             projects.map((project) => (
